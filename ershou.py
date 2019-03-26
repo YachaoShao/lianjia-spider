@@ -2,7 +2,7 @@
 # coding=utf-8
 # author: Zeng YueTian
 # 获得指定城市的二手房数据
-import BeautifulSoup as BeautifulSoup
+from bs4 import BeautifulSoup as BeautifulSoup
 import threadpool
 import threading
 from lib.utility.date import *
@@ -84,16 +84,20 @@ def get_area_ershou_info(city_name, area_name):
         house_elements = soup.find_all('li', class_="clear")
         for house_elem in house_elements:
             price = house_elem.find('div', class_="totalPrice")
-            name = house_elem.find('div', class_='title')
+            price_unit = house_elem.find('div', class_="unitPrice")  # price per square meter
+            # name = house_elem.find('div', class_='title')
             desc = house_elem.find('div', class_="houseInfo")
-
+            position = house_elem.find('div', class_='positionInfo')
             # 继续清理数据
             price = price.text.strip()
-            name = name.text.replace("\n", "")
+            price_unit = price_unit.text.strip()
+            # name = name.text.replace("\n", "")
             desc = desc.text.replace("\n", "").strip()
+            position = position.text.replace("\n", "").strip()
 
             # 作为对象保存
-            ershou = ErShou(chinese_district, chinese_area, name, price, desc)
+            # ershou = ErShou(chinese_district, chinese_area, name, price, price_unit, desc)
+            ershou = ErShou(chinese_district, chinese_area, desc, position, price, price_unit)
             ershou_list.append(ershou)
     return ershou_list
 
