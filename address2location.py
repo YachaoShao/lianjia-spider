@@ -15,7 +15,7 @@ base = '/v3/geocode/geo'
 
 def parse(file_name):
     datas = []
-    raw_data = pd.read_csv(file_name, names=['date','strict','xiaoqu','house_details','price','more_details'])
+    raw_data = pd.read_csv(file_name, names=['date','strict','xiaoqu','more_details','position','price','unit_price'])
     raw_data_dict = raw_data.to_dict('index')
     for i in range(0, len(raw_data_dict)):
         address_detail = str(raw_data_dict[i]['strict']) + str(raw_data_dict[i]['xiaoqu']) + str(raw_data_dict[i]['more_details'])
@@ -55,10 +55,9 @@ def geocode(address, key):
 
 if __name__ == '__main__':
     i = 0
-    count = 0
     df = pd.DataFrame(columns=['address', 'location'])
     # locations = parse(item)
-    file_path = '/Users/shaoyc/Github/lianjia-spider/data/ershou/bj/20190325/qianmen.csv'
+    file_path = '/home/yachao/github/lianjia-spider/ershou_merged_20190401.csv'
     address_list = parse(file_path)
     print(len(address_list))
     key_test = 'a73877a9bbf91ae2f90b80c96a60b2b5'
@@ -67,4 +66,5 @@ if __name__ == '__main__':
         location = geocode(addr, key_test)
         df.loc[i] = [addr, location]
         i = i + 1
-    df.to_csv('address_location_detail.csv', index=False)
+        print(i)
+    df.to_csv('address_location_detail_ershou_20190401.csv', index=False)
