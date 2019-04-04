@@ -62,6 +62,7 @@ if __name__ == '__main__':
     df = pd.DataFrame(columns=['address', 'location'])
     key_test = ['a73877a9bbf91ae2f90b80c96a60b2b5','3128897cfac897df4fd250d471d412ba','4cf1979dd1c596e80751fabe4686c3f1','8cba5174d15beb23c23f4dd0b3d6489c']
     for addr in address_list:
+        addr = addr + '北京'
         print(addr)
         location = geocode(addr, key_test[i/3000])
         df.loc[len(df)] = [addr, location]
