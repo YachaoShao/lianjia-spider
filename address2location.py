@@ -54,17 +54,17 @@ def geocode(address, key):
 
 
 if __name__ == '__main__':
-    i = 0
-    df = pd.DataFrame(columns=['address', 'location'])
     # locations = parse(item)
     file_path = '/home/yachao/github/lianjia-spider/ershou_merged_20190401.csv'
     address_list = parse(file_path)
     print(len(address_list))
-    key_test = 'a73877a9bbf91ae2f90b80c96a60b2b5'
+    i = 0
+    df = pd.DataFrame(columns=['address', 'location'])
+    key_test = ['a73877a9bbf91ae2f90b80c96a60b2b5','3128897cfac897df4fd250d471d412ba','4cf1979dd1c596e80751fabe4686c3f1','8cba5174d15beb23c23f4dd0b3d6489c']
     for addr in address_list:
         print(addr)
-        location = geocode(addr, key_test)
-        df.loc[i] = [addr, location]
+        location = geocode(addr, key_test[i/3000])
+        df.loc[len(df)] = [addr, location]
         i = i + 1
         print(i)
     df.to_csv('address_location_detail_ershou_20190401.csv', index=False)
