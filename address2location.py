@@ -64,7 +64,7 @@ if __name__ == '__main__':
     for addr in address_list:
         addr = '北京' + addr
         print(addr)
-        location = geocode(addr, key_test[i/3000])
+        location = geocode(addr, key_test[i//3000])
         df.loc[len(df)] = [addr, location]
         i = i + 1
         print(i)
