@@ -109,7 +109,7 @@ if __name__ == '__main__':
         lng = float(lng)
         lat = float(lat)
         baidu_location = gcj02_to_bd09(lng, lat)
-        location_poi_list.loc[len(location_poi_list)]=location_poi(baidu_location, AK_list[i//2000])
+        location_poi_list.loc[len(location_poi_list)]=location_poi(baidu_location, AK_list[i//2000 + 1])
         i = i + 1
         print("Finish transfer %d location's POI extracting."%i)
     location_poi_list['location'] = location_list
