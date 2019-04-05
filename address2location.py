@@ -54,6 +54,8 @@ def geocode(address, key):
 
 
 if __name__ == '__main__':
+    print("start to transfer address to location......")
+    time_start = time.time()
     # locations = parse(item)
     file_path = '/home/yachao/github/lianjia-spider/ershou_merged_20190401.csv'
     address_list = parse(file_path)
@@ -69,3 +71,5 @@ if __name__ == '__main__':
         i = i + 1
         print(i)
     df.to_csv('address_location_detail_ershou_20190401.csv', index=False)
+    time_end = time.time()
+    print("Tranfering finished, using %f" % (time_end - time_start))
