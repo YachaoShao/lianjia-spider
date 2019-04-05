@@ -22,7 +22,7 @@ def clean_raw_data(file_name):
     clean_data['full_address'] = basic_information[0]
     clean_data['sleeping_room'] = basic_information[1].str[0]
     clean_data['drawing_room'] = basic_information[1].str[2]
-    clean_data['building_area'] = basic_information[2].str[:-2].astype(float)
+    clean_data['building_area'] = basic_information[2].str[:-2]
     clean_data['direction'] = basic_information[3]
     clean_data['house_design'] = basic_information[4]
     clean_data['lift'] = basic_information[5]
