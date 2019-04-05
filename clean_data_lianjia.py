@@ -19,7 +19,8 @@ def clean_raw_data(file_name):
     clean_data['unit_price'] = raw_data['unit_price'].str[2:-4].astype(float)
     basic_information = '北京' + raw_data['strict'] +raw_data['xiaoqu'] + raw_data['more_details']
     basic_information = basic_information.str.split('/', expand=True)
-    clean_data['full_address'] = basic_information[0]
+    clean_data['full_address'] = raw_data['more_details'].str.split('/', expand=True)[0]
+    clean_data['building'] = raw_data['more_details']
     clean_data['sleeping_room'] = basic_information[1].str[0]
     clean_data['drawing_room'] = basic_information[1].str[2]
     clean_data['building_area'] = basic_information[2].str[:-2]
