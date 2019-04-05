@@ -29,7 +29,7 @@ def clean_raw_data(file_name):
     position_infomation = raw_data['position'].str.split('/', expand=True)
     clean_data['position'] = position_infomation[0].str[0]
     clean_data['floors_building'] = position_infomation[0]
-    clean_data['building_year'] = position_infomation[1].str[0:3]
+    clean_data['building_year'] = position_infomation[1].str[0:4]
     clean_data.to_csv('cleaned_data_beijing_20190401.csv', index=False)
 
 
