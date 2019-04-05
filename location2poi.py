@@ -88,7 +88,8 @@ if __name__ == '__main__':
     fin.close()
 
 
-    location_file = '/Users/shaoyc/PycharmProjects/lianjia-spider/address_location_detail.csv'
+    # location_file = '/Users/shaoyc/PycharmProjects/lianjia-spider/address_location_detail.csv'
+    location_file = '/Users/shaoyc/PycharmProjects/lianjia-spider/address_location_detail_ershou_20190401.csv'
     location_list = pd.read_csv(location_file)['location']
     columns_name = ['baidu_location', 'poi_1_number', 'poi_1_distance_ave',
                'poi_2_number', 'poi_2_distance_ave', 'poi_3_number', 'poi_3_distance_ave',
