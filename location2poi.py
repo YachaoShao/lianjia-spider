@@ -9,8 +9,10 @@ import urllib
 import math
 import pandas as pd
 import time
+import threading
+import threadpool
 
-
+threadpool_size = 10
 
 def gcj02_to_bd09(lng, lat):
 
@@ -73,10 +75,17 @@ def location_poi(baidu_location, baidu_api_key):
     # input("Press Enter to continue...")
 
 
-if __name__ == '__main__':
-    time_start = time.time()
-    print("start extract poi information from baidu......")
-    # creat baidu_APIKEY list
+
+def multi_thread_location_poi(location_file_path,split_tag, fmt="csv"):
+    """
+    对于每个板块,获得这个板块下所有二手房的信息
+    并且将这些信息写入文件保存
+    :param location_file_path: 文件路径
+    :param split_tag: 切分后的文件后缀
+    :param fmt: 保存文件格式
+    :return: None
+    """
+    global total_num
     AK_list = []
     fin = open('AK.txt', 'r')
     while (1):
@@ -86,38 +95,68 @@ if __name__ == '__main__':
         AK_list.append(line)
 
     fin.close()
+    csv_file = "poi_location_split_{0}.csv".format(split_tag)
+    with open(csv_file, "w") as f:
+        # 开始获得需要的板块数据
+        location_file = open(location_file_path)
+
+        location_list = pd.read_csv(location_file)['location']
+        columns_name = ['baidu_location', 'poi_1_number', 'poi_1_distance_ave',
+                        'poi_2_number', 'poi_2_distance_ave', 'poi_3_number', 'poi_3_distance_ave',
+                        'poi_4_number', 'poi_4_distance_ave', 'poi_5_number', 'poi_5_distance_ave',
+                        'poi_6_number', 'poi_6_distance_ave', 'poi_7_number', 'poi_7_distance_ave',
+                        'poi_8_number', 'poi_8_distance_ave', 'poi_9_number', 'poi_9_distance_ave',
+                        'poi_10_number', 'poi_10_distance_ave', 'poi_11_number', 'poi_11_distance_ave',
+                        'poi_12_number', 'poi_12_distance_ave', 'poi_13_number', 'poi_13_distance_ave',
+                        'poi_14_number', 'poi_14_distance_ave', 'poi_15_number', 'poi_15_distance_ave',
+                        'poi_16_number', 'poi_16_distance_ave', 'poi_17_number', 'poi_17_distance_ave',
+                        'poi_18_number', 'poi_18_distance_ave', 'poi_19_number', 'poi_19_distance_ave']
+        location_poi_list = pd.DataFrame(columns=columns_name)
+
+        i = 0
+        for location in location_list:
+            lng, lat = location.split(',')
+            lng = float(lng)
+            lat = float(lat)
+            baidu_location = gcj02_to_bd09(lng, lat)
+            location_poi_list.loc[len(location_poi_list)] = location_poi(baidu_location, AK_list[i // 200 ])
+            i = i + 1
+            print("Finish transfer %d location's POI extracting." % i)
+        location_poi_list['location'] = location_list
+        # ershous = return_poi_list(location_file_path, split_tag)
+        # 锁定
+        # if mutex.acquire(1):
+        #     total_num += len(ershous)
+        #     # 释放
+        #     mutex.release()
+        if fmt == "csv":
+            for poi_location in location_poi_list:
+                # print(date_string + "," + xiaoqu.text())
+                f.write(poi_location.text() + "\n")
+    print("Finish crawl split file: " + location_file_path + split_tag + ", save data to : " + csv_file)
 
 
-    # location_file = '/Users/shaoyc/PycharmProjects/lianjia-spider/address_location_detail.csv'
-    location_file = 'address_location_detail_ershou_20190401.csv'
-    location_list = pd.read_csv(location_file)['location']
-    columns_name = ['baidu_location', 'poi_1_number', 'poi_1_distance_ave',
-               'poi_2_number', 'poi_2_distance_ave', 'poi_3_number', 'poi_3_distance_ave',
-               'poi_4_number', 'poi_4_distance_ave', 'poi_5_number', 'poi_5_distance_ave',
-               'poi_6_number', 'poi_6_distance_ave', 'poi_7_number', 'poi_7_distance_ave',
-               'poi_8_number', 'poi_8_distance_ave', 'poi_9_number', 'poi_9_distance_ave',
-               'poi_10_number', 'poi_10_distance_ave', 'poi_11_number', 'poi_11_distance_ave',
-               'poi_12_number', 'poi_12_distance_ave', 'poi_13_number', 'poi_13_distance_ave',
-               'poi_14_number', 'poi_14_distance_ave', 'poi_15_number', 'poi_15_distance_ave',
-               'poi_16_number', 'poi_16_distance_ave', 'poi_17_number', 'poi_17_distance_ave',
-               'poi_18_number', 'poi_18_distance_ave', 'poi_19_number', 'poi_19_distance_ave']
-    location_poi_list = pd.DataFrame(columns=columns_name)
+if __name__ == '__main__':
+    time_start = time.time()
+    print("start extract poi information from baidu......")
+    # creat baidu_APIKEY list
+    location_file_path = ['address_location_split_part_0']
+    split_list = [i for i in range(9)]
+    # 准备线程池用到的参数
+    nones = [None for i in range(9)]
+    file_list = [location_file_path+str(i) for i in range(9)]
+    args = zip(zip(file_list, split_list), nones)
+    # areas = areas[0: 1]   # For debugging
 
-    i = 0
-    for location in location_list:
-        lng, lat = location.split(',')
-        lng = float(lng)
-        lat = float(lat)
-        baidu_location = gcj02_to_bd09(lng, lat)
-        location_poi_list.loc[len(location_poi_list)]=location_poi(baidu_location, AK_list[i//2000 + 1])
-        i = i + 1
-        print("Finish transfer %d location's POI extracting."%i)
-    location_poi_list['location'] = location_list
-    location_poi_list.to_csv("location_poi_beijing_ershou_0401.csv")
+    # 针对每个板块写一个文件,启动一个线程来操作
+    pool_size = threadpool_size
+    pool = threadpool.ThreadPool(pool_size)
+    my_requests = threadpool.makeRequests(multi_thread_location_poi, args)
+    [pool.putRequest(req) for req in my_requests]
+    pool.wait()
+    pool.dismissWorkers(pool_size, do_join=True)
     time_end = time.time()
-    print("Finished all POI information extration, using %f."%(time_end-time_start))
-
-
+    print("Finished all POI information extration, using %f." % (time_end - time_start))
 
 
 
