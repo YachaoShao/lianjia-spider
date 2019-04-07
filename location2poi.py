@@ -141,7 +141,7 @@ if __name__ == '__main__':
     print("start extract poi information from baidu......")
     # creat baidu_APIKEY list
     location_file_path = ['address_location_split_part_0']
-    split_list = [i for i in range(9)]
+    split_list = [str(i) for i in range(9)]
     # 准备线程池用到的参数
     nones = [None for i in range(9)]
     file_list = [location_file_path for i in range(9)]
