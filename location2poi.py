@@ -98,7 +98,7 @@ def multi_thread_location_poi(location_file_path,split_tag, fmt="csv"):
     csv_file = "poi_location_split_{0}.csv".format(split_tag)
     with open(csv_file, "w") as f:
         # 开始获得需要的板块数据
-        location_file = open(location_file_path)
+        location_file = open(location_file_path+split_tag)
 
         location_list = pd.read_csv(location_file)['location']
         columns_name = ['baidu_location', 'poi_1_number', 'poi_1_distance_ave',
@@ -144,7 +144,7 @@ if __name__ == '__main__':
     split_list = [i for i in range(9)]
     # 准备线程池用到的参数
     nones = [None for i in range(9)]
-    file_list = [location_file_path+str(i) for i in range(9)]
+    file_list = [location_file_path for i in range(9)]
     args = zip(zip(file_list, split_list), nones)
     # areas = areas[0: 1]   # For debugging
 
