@@ -98,42 +98,44 @@ def multi_thread_location_poi(location_file_path,split_tag, fmt="csv"):
     csv_file = "poi_location_split_{0}.csv".format(split_tag)
     with open(csv_file, "w") as f:
         # 开始获得需要的板块数据
-        location_file = open(location_file_path.append(split_tag))
-
-        location_list = pd.read_csv(location_file)['location']
-        columns_name = ['baidu_location', 'poi_1_number', 'poi_1_distance_ave',
-                        'poi_2_number', 'poi_2_distance_ave', 'poi_3_number', 'poi_3_distance_ave',
-                        'poi_4_number', 'poi_4_distance_ave', 'poi_5_number', 'poi_5_distance_ave',
-                        'poi_6_number', 'poi_6_distance_ave', 'poi_7_number', 'poi_7_distance_ave',
-                        'poi_8_number', 'poi_8_distance_ave', 'poi_9_number', 'poi_9_distance_ave',
-                        'poi_10_number', 'poi_10_distance_ave', 'poi_11_number', 'poi_11_distance_ave',
-                        'poi_12_number', 'poi_12_distance_ave', 'poi_13_number', 'poi_13_distance_ave',
-                        'poi_14_number', 'poi_14_distance_ave', 'poi_15_number', 'poi_15_distance_ave',
-                        'poi_16_number', 'poi_16_distance_ave', 'poi_17_number', 'poi_17_distance_ave',
-                        'poi_18_number', 'poi_18_distance_ave', 'poi_19_number', 'poi_19_distance_ave']
-        location_poi_list = pd.DataFrame(columns=columns_name)
-
-        i = 0
-        for location in location_list:
-            lng, lat = location.split(',')
-            lng = float(lng)
-            lat = float(lat)
-            baidu_location = gcj02_to_bd09(lng, lat)
-            location_poi_list.loc[len(location_poi_list)] = location_poi(baidu_location, AK_list[i // 200 ])
-            i = i + 1
-            print("Finish transfer %d location's POI extracting." % i)
-        location_poi_list['location'] = location_list
-        # ershous = return_poi_list(location_file_path, split_tag)
-        # 锁定
-        # if mutex.acquire(1):
-        #     total_num += len(ershous)
-        #     # 释放
-        #     mutex.release()
-        if fmt == "csv":
-            for poi_location in location_poi_list:
-                # print(date_string + "," + xiaoqu.text())
-                f.write(poi_location.text() + "\n")
-    print("Finish crawl split file: " + location_file_path + split_tag + ", save data to : " + csv_file)
+        print(location_file_path)
+        print(split_tag)
+    #     location_file = open(location_file_path+split_tag)
+    #
+    #     location_list = pd.read_csv(location_file)['location']
+    #     columns_name = ['baidu_location', 'poi_1_number', 'poi_1_distance_ave',
+    #                     'poi_2_number', 'poi_2_distance_ave', 'poi_3_number', 'poi_3_distance_ave',
+    #                     'poi_4_number', 'poi_4_distance_ave', 'poi_5_number', 'poi_5_distance_ave',
+    #                     'poi_6_number', 'poi_6_distance_ave', 'poi_7_number', 'poi_7_distance_ave',
+    #                     'poi_8_number', 'poi_8_distance_ave', 'poi_9_number', 'poi_9_distance_ave',
+    #                     'poi_10_number', 'poi_10_distance_ave', 'poi_11_number', 'poi_11_distance_ave',
+    #                     'poi_12_number', 'poi_12_distance_ave', 'poi_13_number', 'poi_13_distance_ave',
+    #                     'poi_14_number', 'poi_14_distance_ave', 'poi_15_number', 'poi_15_distance_ave',
+    #                     'poi_16_number', 'poi_16_distance_ave', 'poi_17_number', 'poi_17_distance_ave',
+    #                     'poi_18_number', 'poi_18_distance_ave', 'poi_19_number', 'poi_19_distance_ave']
+    #     location_poi_list = pd.DataFrame(columns=columns_name)
+    #
+    #     i = 0
+    #     for location in location_list:
+    #         lng, lat = location.split(',')
+    #         lng = float(lng)
+    #         lat = float(lat)
+    #         baidu_location = gcj02_to_bd09(lng, lat)
+    #         location_poi_list.loc[len(location_poi_list)] = location_poi(baidu_location, AK_list[i // 200 ])
+    #         i = i + 1
+    #         print("Finish transfer %d location's POI extracting." % i)
+    #     location_poi_list['location'] = location_list
+    #     # ershous = return_poi_list(location_file_path, split_tag)
+    #     # 锁定
+    #     # if mutex.acquire(1):
+    #     #     total_num += len(ershous)
+    #     #     # 释放
+    #     #     mutex.release()
+    #     if fmt == "csv":
+    #         for poi_location in location_poi_list:
+    #             # print(date_string + "," + xiaoqu.text())
+    #             f.write(poi_location.text() + "\n")
+    # print("Finish crawl split file: " + location_file_path + split_tag + ", save data to : " + csv_file)
 
 
 if __name__ == '__main__':
