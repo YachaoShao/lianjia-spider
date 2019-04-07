@@ -123,7 +123,7 @@ def multi_thread_location_poi(location_file_path,split_tag, fmt="csv"):
             baidu_location = gcj02_to_bd09(lng, lat)
             location_poi_list.loc[len(location_poi_list)] = location_poi(baidu_location, AK_list[i // 200 ])
             i = i + 1
-            print("Finish transfer %d location's POI extracting." % i)
+            print("Finish transfer {0} location's POI extracting of split file {1}.".format(i,split_tag))
         location_poi_list['location'] = location_list
         # ershous = return_poi_list(location_file_path, split_tag)
         # 锁定
