@@ -98,7 +98,7 @@ def multi_thread_location_poi(location_file_path,split_tag, fmt="csv"):
     csv_file = "poi_location_split_{0}.csv".format(split_tag)
     with open(csv_file, "w") as f:
         # 开始获得需要的板块数据
-        location_file = open(location_file_path+split_tag)
+        location_file = open(location_file_path.append(split_tag))
 
         location_list = pd.read_csv(location_file)['location']
         columns_name = ['baidu_location', 'poi_1_number', 'poi_1_distance_ave',
