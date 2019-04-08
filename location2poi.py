@@ -136,27 +136,29 @@ def multi_thread_location_poi(location_file_path,split_tag, fmt="csv"):
                 # print(date_string + "," + xiaoqu.text())
                 f.write(poi_location.text() + "\n")
     print("Finish crawl split file: " + location_file_path + split_tag + ", save data to : " + csv_file)
-
+    return None
 
 if __name__ == '__main__':
     time_start = time.time()
     print("start extract poi information from baidu......")
     # creat baidu_APIKEY list
     location_file_path = 'address_location_split_part_0'
-    split_list = [str(i) for i in range(9)]
-    # 准备线程池用到的参数
-    nones = [None for i in range(9)]
-    file_list = [location_file_path for i in range(9)]
-    args = zip(zip(file_list, split_list), nones)
+    split_tag = 0
+    multi_thread_location_poi(location_file_path,split_tag,None)
+    # split_list = [str(i) for i in range(9)]
+    # # 准备线程池用到的参数
+    # nones = [None for i in range(9)]
+    # file_list = [location_file_path for i in range(9)]
+    # args = zip(zip(file_list, split_list), nones)
     # areas = areas[0: 1]   # For debugging
 
     # 针对每个板块写一个文件,启动一个线程来操作
-    pool_size = threadpool_size
-    pool = threadpool.ThreadPool(pool_size)
-    my_requests = threadpool.makeRequests(multi_thread_location_poi, args)
-    [pool.putRequest(req) for req in my_requests]
-    pool.wait()
-    pool.dismissWorkers(pool_size, do_join=True)
+    # pool_size = threadpool_size
+    # pool = threadpool.ThreadPool(pool_size)
+    # my_requests = threadpool.makeRequests(multi_thread_location_poi, args)
+    # [pool.putRequest(req) for req in my_requests]
+    # pool.wait()
+    # pool.dismissWorkers(pool_size, do_join=True)
     time_end = time.time()
     print("Finished all POI information extration, using %f." % (time_end - time_start))
 
