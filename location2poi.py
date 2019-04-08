@@ -12,7 +12,7 @@ import time
 import threading
 import threadpool
 
-threadpool_size = 10
+threadpool_size = 50
 
 def gcj02_to_bd09(lng, lat):
 
@@ -85,7 +85,7 @@ def multi_thread_location_poi(location_file_path,split_tag, fmt="csv"):
     :param fmt: 保存文件格式
     :return: None
     """
-    global total_num
+    # global total_num
     AK_list = []
     fin = open('AK.txt', 'r')
     while (1):
@@ -114,16 +114,16 @@ def multi_thread_location_poi(location_file_path,split_tag, fmt="csv"):
                         'poi_16_number', 'poi_16_distance_ave', 'poi_17_number', 'poi_17_distance_ave',
                         'poi_18_number', 'poi_18_distance_ave', 'poi_19_number', 'poi_19_distance_ave']
         location_poi_list = pd.DataFrame(columns=columns_name)
-
+        AK_num =int(split_tag)
         i = 0
         for location in location_list:
             lng, lat = location.split(',')
             lng = float(lng)
             lat = float(lat)
             baidu_location = gcj02_to_bd09(lng, lat)
-            location_poi_list.loc[len(location_poi_list)] = location_poi(baidu_location, AK_list[i // 200 ])
+            location_poi_list.loc[len(location_poi_list)] = location_poi(baidu_location, AK_list[AK_num])
             i = i + 1
-            print("Finish transfer {0} location's POI extracting of split file {1}.".format(i,split_tag))
+            print("Finish transfer {0} location's POI extracting of split file {1}.".format(i, split_tag))
         location_poi_list['location'] = location_list
         # ershous = return_poi_list(location_file_path, split_tag)
         # 锁定
@@ -143,22 +143,22 @@ if __name__ == '__main__':
     print("start extract poi information from baidu......")
     # creat baidu_APIKEY list
     location_file_path = 'address_location_split_part_0'
-    split_tag = 0
-    multi_thread_location_poi(location_file_path,split_tag,None)
-    # split_list = [str(i) for i in range(9)]
-    # # 准备线程池用到的参数
-    # nones = [None for i in range(9)]
-    # file_list = [location_file_path for i in range(9)]
-    # args = zip(zip(file_list, split_list), nones)
+    # split_tag = 0
+    # multi_thread_location_poi(location_file_path, split_tag, None)
+    split_list = [str(i) for i in range(9)]
+    # 准备线程池用到的参数
+    nones = [None for i in range(9)]
+    file_list = [location_file_path for i in range(9)]
+    args = zip(zip(file_list, split_list), nones)
     # areas = areas[0: 1]   # For debugging
 
     # 针对每个板块写一个文件,启动一个线程来操作
-    # pool_size = threadpool_size
-    # pool = threadpool.ThreadPool(pool_size)
-    # my_requests = threadpool.makeRequests(multi_thread_location_poi, args)
-    # [pool.putRequest(req) for req in my_requests]
-    # pool.wait()
-    # pool.dismissWorkers(pool_size, do_join=True)
+    pool_size = threadpool_size
+    pool = threadpool.ThreadPool(pool_size)
+    my_requests = threadpool.makeRequests(multi_thread_location_poi, args)
+    [pool.putRequest(req) for req in my_requests]
+    pool.wait()
+    pool.dismissWorkers(pool_size, do_join=True)
     time_end = time.time()
     print("Finished all POI information extration, using %f." % (time_end - time_start))
 
