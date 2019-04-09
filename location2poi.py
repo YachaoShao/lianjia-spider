@@ -151,7 +151,7 @@ if __name__ == '__main__':
 
     # 准备线程池用到的参数
     nones = [None for i in range(9)]
-    split_list = [i+1 for i in range(9)]
+    split_list = [i for i in range(9)]
     file_list = [location_file_path for i in range(9)]
     args = zip(zip(file_list, split_list),nones)
     # areas = areas[0: 1]   # For debugging
